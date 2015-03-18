@@ -9,7 +9,8 @@ end
 
 command = ARGV[0]
 name = ARGV[1]
-gems = `gem list --remote "^#{name}$"`.lines
+pre = ENV['ALLOW_PRE_RELEASE_GEMS'] ? 'pre' : nil
+gems = `gem list --remote #{pre} "^#{name}$"`.lines
 unless gems.detect { |f| f =~ /^#{name} \(([^\s,]+).*\)/ }
   abort "Could not find a valid gem '#{name}'"
 end
