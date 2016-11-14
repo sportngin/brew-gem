@@ -74,6 +74,10 @@ module Brew::Gem::CLI
 
     version = fetch_version(name, supplied_version)
 
+    if command == "uninstall"
+      command = "uninstall --ignore-dependencies"
+    end
+
     with_temp_formula(name, version, use_homebrew_ruby) do |filename|
       system "brew #{command} #{filename}"
       exit $?.exitstatus unless $?.success?
