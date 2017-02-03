@@ -73,9 +73,12 @@ class <%= klass %> < Formula
       file = Pathname.new("#{brew_gem_prefix}/#{gemspec.bindir}/#{exe}")
       (bin+file.basename).open('w') do |f|
         f << <<-RUBY
+#!/bin/bash
+unset RUBYOPT
+export GEM_HOME="#{prefix}"
+export GEM_PATH="#{prefix}"
+exec #{ruby_path} -x "$0" "$@"
 #!#{ruby_path}
-ENV['GEM_HOME']="#{prefix}"
-ENV['GEM_PATH']="#{prefix}"
 $:.unshift(#{ruby_libs.map(&:inspect).join(",")})
 load "#{file}"
         RUBY
