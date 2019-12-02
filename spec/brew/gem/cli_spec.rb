@@ -22,6 +22,12 @@ RSpec.describe Brew::Gem::CLI do
       subject(:formula) { cli.expand_formula("foo-bar", "1.2.3", true) }
       it { is_expected.to match("USE_HOMEBREW_RUBY = true") }
     end
+
+    context "with PKG_CONFIG_PATH" do
+      before { ENV['PKG_CONFIG_PATH'] = '/usr/local/lib/pkgconfig' }
+
+      it { is_expected.to match('BREW_GEM_PKG_CONFIG_PATH = "/usr/local/lib/pkgconfig"')}
+    end
   end
 
   context "#run" do

@@ -4,6 +4,7 @@ require 'formula'
 require 'fileutils'
 
 USE_HOMEBREW_RUBY = <%= use_homebrew_ruby ? "true" : "false" %>
+BREW_GEM_PKG_CONFIG_PATH = <%= ENV['PKG_CONFIG_PATH'] && ENV['PKG_CONFIG_PATH'].inspect %>
 
 module RubyBin
   def ruby_bin
@@ -66,6 +67,17 @@ class <%= klass %> < Formula
     # which mess with Ruby's own compiler config when building native extensions
     if defined?(HOMEBREW_SHIMS_PATH)
       ENV['PATH'] = ENV['PATH'].sub(HOMEBREW_SHIMS_PATH.to_s, '/usr/local/bin')
+    end
+
+    # Allow injecting pkg config into paths. For gems that have native
+    # extensions, we need a way to inject build information into the extconf.rb
+    # process. Many extconf.rb files already use pkg_config to get this
+    # information. It's not straightforward to use Homebrew formula dependencies
+    # in a reliable way since the dependencies vary from gem to gem.
+    if BREW_GEM_PKG_CONFIG_PATH
+      ENV['PKG_CONFIG_PATH'] = [BREW_GEM_PKG_CONFIG_PATH,
+                                ENV['PKG_CONFIG_PATH']
+                               ].compact.join(File::PATH_SEPARATOR)
     end
 
     system "#{ruby_bin}/gem", "install", cached_download,
