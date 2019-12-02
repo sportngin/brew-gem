@@ -12,7 +12,7 @@ end
 RSpec.configure do |c|
   c.filter_run focus: true
   c.run_all_when_everything_filtered = true
-  unless system('which brew > /dev/null')
+  if ENV['SKIP_INTEGRATION'] || !system('which brew > /dev/null')
     c.filter_run_excluding integration: true
   end
 end
