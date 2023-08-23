@@ -1,129 +1,90 @@
-brew-gem -- install gems as homebrew formulas
-=============================================
+# Homebrew
 
-`brew gem` allows you to install any rubygem as a homebrew formula.
+[![GitHub release](https://img.shields.io/github/release/Homebrew/brew.svg)](https://github.com/Homebrew/brew/releases)
 
-It works by generating a stub formula for homebrew, which looks something like this:
+Features, usage and installation instructions are [summarised on the homepage](https://brew.sh). Terminology (e.g. the difference between a Cellar, Tap, Cask and so forth) is [explained here](https://docs.brew.sh/Formula-Cookbook#homebrew-terminology).
 
-    class Ronn < Formula
-      def initialize(*args)
-        @name = "ronn"
-        @version = "0.7.3"
-        super
-      end
+## What Packages Are Available?
 
-      def install
-        system "gem", "install", name, "--version", version, "--install-dir", prefix
-      end
-    end
+1. Type `brew formulae` for a list.
+2. Or visit [formulae.brew.sh](https://formulae.brew.sh) to browse packages online.
 
-This formula installs and unpacks all the dependencies under the Cellar path. So the package is completely self contained.
+## More Documentation
 
+`brew help`, `man brew` or check [our documentation](https://docs.brew.sh/).
 
-Dependencies
-------------
-This requires a system rubygems version of 2.3 or greater
-There is a bug prior to 2.3 that doesn't install the full dependency tree properly when you use the install-dir flag.
+## Troubleshooting
 
-```
-sudo /usr/bin/gem update --system
-```
+First, please run `brew update` and `brew doctor`.
 
+Second, read the [Troubleshooting Checklist](https://docs.brew.sh/Troubleshooting).
 
-Install
--------
+**If you don't read these it will take us far longer to help you with your problem.**
 
-There are two ways to install `brew-gem`, via Homebrew or via Rubygems. Usually
-the Rubygems release will track ahead of the Homebrew recipe, so to receive the
-latest features, use the Rubygems install instructions.
+## Donations
 
-*Warning*: If you previously installed `brew-gem` with Homebrew, the Rubygems
-install method will fail. Run `brew unlink brew-gem` or `brew uninstall
-brew-gem` first.
+Homebrew is a non-profit project run entirely by unpaid volunteers. We need your funds to pay for software, hardware and hosting around continuous integration and future improvements to the project. Every donation will be spent on making Homebrew better for our users.
 
-Via Rubygems:
+Please consider a regular donation through [GitHub Sponsors](https://github.com/sponsors/Homebrew), [Open Collective](https://opencollective.com/homebrew) or [Patreon](https://www.patreon.com/homebrew). Homebrew is fiscally hosted by the [Open Source Collective](https://opencollective.com/opensource).
 
-    gem install brew-gem
-    brew-gem install brew-gem
+## Community
 
-Via Homebrew:
+- [Homebrew/discussions (forum)](https://github.com/orgs/Homebrew/discussions)
+- [@MacHomebrew (Twitter)](https://twitter.com/MacHomebrew)
+- [@homebrew@fosstodon.org (Mastodon)](https://fosstodon.org/@homebrew)
 
-    brew install brew-gem
+## Contributing
 
+We'd love you to contribute to Homebrew. First, please read our [Contribution Guide](CONTRIBUTING.md) and [Code of Conduct](https://github.com/Homebrew/.github/blob/HEAD/CODE_OF_CONDUCT.md#code-of-conduct).
 
-Usage
------
+We explicitly welcome contributions from people who have never contributed to open-source before: we were all beginners once! We can help build on a partially working pull request with the aim of getting it merged. We are also actively seeking to diversify our contributors and especially welcome contributions from women from all backgrounds and people of colour.
 
-    brew gem install heroku
+A good starting point for contributing is to first [tap Homebrew/homebrew-core](https://docs.brew.sh/FAQ#can-i-edit-formulae-myself), run `brew audit --strict` with some of the packages you use (e.g. `brew audit --strict wget` if you use `wget`) and then read through the warnings, try to fix them until `brew audit --strict` shows no results and [submit a pull request](https://docs.brew.sh/How-To-Open-a-Homebrew-Pull-Request). If no formulae you use have warnings you can run `brew audit --strict` without arguments to have it run on all packages and pick one.
 
-To install a specific version:
+Alternatively, for something more substantial, check out one of the issues labeled `help wanted` in [Homebrew/brew](https://github.com/homebrew/brew/issues?q=is%3Aopen+is%3Aissue+label%3A%22help+wanted%22) or [Homebrew/homebrew-core](https://github.com/homebrew/homebrew-core/issues?q=is%3Aopen+is%3Aissue+label%3A%22help+wanted%22).
 
-    brew gem install heroku 3.8.3
+Good luck!
 
-To install using a brew installed ruby(/usr/local/bin/ruby):
+## Security
 
-    brew gem install heroku --homebrew-ruby
+Please report security issues by filling in [the security advisory form](https://github.com/homebrew/brew/security/advisories/new).
 
-And with a specific version:
+## Who We Are
 
-    brew gem install heroku 3.8.3 --homebrew-ruby
+Homebrew's [Project Leader](https://docs.brew.sh/Homebrew-Governance#6-project-leader) is [Mike McQuaid](https://github.com/MikeMcQuaid).
 
-To upgrade:
+Homebrew's [Project Leadership Committee](https://docs.brew.sh/Homebrew-Governance#4-project-leadership-committee) is [Colin Dean](https://github.com/colindean), [Issy Long](https://github.com/issyl0), [Mike McQuaid](https://github.com/MikeMcQuaid), [Misty De Méo](https://github.com/mistydemeo) and [Sean Molenaar](https://github.com/SMillerDev).
 
-    brew gem upgrade heroku
+Homebrew's [Technical Steering Committee](https://docs.brew.sh/Homebrew-Governance#7-technical-steering-committee) is [Bo Anderson](https://github.com/Bo98), [FX Coudert](https://github.com/fxcoudert), [Michka Popoff](https://github.com/iMichka), [Mike McQuaid](https://github.com/MikeMcQuaid) and [Rylan Polster](https://github.com/Rylan12).
 
-To uninstall:
+Homebrew's maintainers are [Alexander Bayandin](https://github.com/bayandin), [Bevan Kay](https://github.com/bevanjkay), [Bo Anderson](https://github.com/Bo98), [Branch Vincent](https://github.com/branchvincent), [Caleb Xu](https://github.com/alebcay), [Carlo Cabrera](https://github.com/carlocab), [Daniel Nachun](https://github.com/danielnachun), [David Baumgold](https://github.com/singingwolfboy), [Dawid Dziurla](https://github.com/dawidd6), [Dustin Rodrigues](https://github.com/dtrodrigues), [Eric Knibbe](https://github.com/EricFromCanada), [FX Coudert](https://github.com/fxcoudert), [George Adams](https://github.com/gdams), [Issy Long](https://github.com/issyl0), [Justin Krehel](https://github.com/krehel), [Markus Reiter](https://github.com/reitermarkus), [Miccal Matthews](https://github.com/miccal), [Michael Cho](https://github.com/cho-m), [Michka Popoff](https://github.com/iMichka), [Mike McQuaid](https://github.com/MikeMcQuaid), [Nanda H Krishna](https://github.com/nandahkrishna), [Patrick Linnane](https://github.com/p-linnane), [Razvan Azamfirei](https://github.com/razvanazamfirei), [Rui Chen](https://github.com/chenrui333), [Ruoyu Zhong](https://github.com/ZhongRuoyu), [Rylan Polster](https://github.com/Rylan12), [Sam Ford](https://github.com/samford), [Sean Molenaar](https://github.com/SMillerDev) and [Thierry Moisan](https://github.com/Moisan).
 
-    brew gem uninstall heroku
+Former maintainers with significant contributions include [Misty De Méo](https://github.com/mistydemeo), [Shaun Jackman](https://github.com/sjackman), [Vítor Galvão](https://github.com/vitorgalvao), [Claudia Pellegrino](https://github.com/claui), [Seeker](https://github.com/SeekingMeaning), [William Woodruff](https://github.com/woodruffw), [Jan Viljanen](https://github.com/javian), [JCount](https://github.com/jcount), [commitay](https://github.com/commitay), [Dominyk Tiller](https://github.com/DomT4), [Tim Smith](https://github.com/tdsmith), [Baptiste Fontaine](https://github.com/bfontaine), [Xu Cheng](https://github.com/xu-cheng), [Martin Afanasjew](https://github.com/UniqMartin), [Brett Koonce](https://github.com/asparagui), [Charlie Sharpsteen](https://github.com/Sharpie), [Jack Nagel](https://github.com/jacknagel), [Adam Vandenberg](https://github.com/adamv), [Andrew Janke](https://github.com/apjanke), [Alex Dunn](https://github.com/dunn), [neutric](https://github.com/neutric), [Tomasz Pajor](https://github.com/nijikon), [Uladzislau Shablinski](https://github.com/vladshablinsky), [Alyssa Ross](https://github.com/alyssais), [ilovezfs](https://github.com/ilovezfs), [Chongyu Zhu](https://github.com/lembacon) and Homebrew's creator: [Max Howell](https://github.com/mxcl).
 
-To check information:
+## License
 
-    brew gem info heroku
+Code is under the [BSD 2-clause "Simplified" License](LICENSE.txt).
+Documentation is under the [Creative Commons Attribution license](https://creativecommons.org/licenses/by/4.0/).
 
-Note:
+## Sponsors
 
-Installed gems are listed in `brew list` with prefix of `gem-`,
-like `gem-heroku`.
+Our macOS continuous integration infrastructure is hosted by [MacStadium's Orka](https://www.macstadium.com/customers/homebrew).
 
-### BASH/ZSH Completions
+[![Powered by MacStadium](https://cloud.githubusercontent.com/assets/125011/22776032/097557ac-eea6-11e6-8ba8-eff22dfd58f1.png)](https://www.macstadium.com)
 
-To make use of completions for your gem, you need to install the
-`bash-completion` formula:
+Secure password storage and syncing is provided by [1Password for Teams](https://1password.com/teams/).
 
-    brew install bash-completion
+[<img src="https://i.1password.com/akb/featured/1password-icon.svg" alt="1Password" height="64">](https://1password.com)
 
-And then install a gem with the completion files in the following locations:
+Flaky test detection and tracking is provided by [BuildPulse](https://buildpulse.io/).
 
-* A directory named either `completion` or `completions` with the file being
-  the name of the gem appended with the completion type.
+[![BuildPulse](https://github.com/Homebrew/brew/assets/1699443/87385e9a-6c47-4e59-b17e-fe083e945709)](https://buildpulse.io)
 
-  For example:  `completions/tmuxinator.bash`
-* A file somewhere in your repo named `<your_gem_name>_completion.zsh`.
+<https://brew.sh>'s DNS is [resolving with DNSimple](https://dnsimple.com/resolving/homebrew).
 
-Files with `.bash` and `.sh` will be associated with bash and files ending in
-`.zsh` will be associated with zsh.
+[![DNSimple](https://cdn.dnsimple.com/assets/resolving-with-us/logo-light.png)](https://dnsimple.com/resolving/homebrew#gh-light-mode-only)
+[![DNSimple](https://cdn.dnsimple.com/assets/resolving-with-us/logo-dark.png)](https://dnsimple.com/resolving/homebrew#gh-dark-mode-only)
 
+Homebrew is generously supported by [GitHub](https://github.com/github), [Custom Ink](https://github.com/customink), [Randy Reddig](https://github.com/ydnar), [Sentry](https://github.com/getsentry), [Codecademy](https://github.com/Codecademy), [fly.io](https://github.com/superfly), [Appwrite](https://github.com/appwrite), [Modern Treasury](https://github.com/Modern-Treasury), [embark-studios](https://github.com/embark-studios), [Agilend](https://github.com/Agilend) and many other users and organisations via [GitHub Sponsors](https://github.com/sponsors/Homebrew).
 
-Philosophy
-----------
-
-This is **not** for installing development libraries, but for standalone binary tools that you want system wide.
-
-
-Troubleshooting
-----------
-
-If your seeing build errors similar to this:
-```shell
-==> Fetching opsicle from gem source
-==> gem install /Library/Caches/Homebrew/opsicle-0.4.2.gem --no-rdoc --no-ri --no-user-install --install-dir /usr/local/Cellar/opsicle/0.4.2 --bindir /usr/local/Cellar/opsicle/0.4.2/bin
-make: *** [generator.bundle] Error 1
-Gem files will remain installed in /usr/local/Cellar/opsicle/0.4.2/gems/json-1.8.1 for inspection.
-Results logged to /usr/local/Cellar/opsicle/0.4.2/gems/json-1.8.1/ext/json/ext/generator/gem_make.out
-READ THIS: https://github.com/Homebrew/homebrew/wiki/troubleshooting
-```
-
-You probably have xcode 5.1 installed which changed the way the compilers handle flags.
-
-You'll need to set `ARCHFLAGS=-Wno-error=unused-command-line-argument-hard-error-in-future` before installing.
-_You may want to add this to your profile so you don't have to set it each time._
+[![GitHub](https://github.com/github.png?size=64)](https://github.com/github)[![fly.io](https://github.com/superfly.png?size=64)](https://github.com/superfly)
