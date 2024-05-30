@@ -49,7 +49,7 @@ RSpec.describe Brew::Gem, type: :aruba  do
   install_metadata.update announce_stderr: true, announce_stdout: true if ENV['DEBUG']
 
   context "install/uninstall", install_metadata do
-    def gli_linked?; File.exists?("#{brew('--prefix').output.chomp}/bin/gli"); end
+    def gli_linked?; File.exist?("#{brew('--prefix').output.chomp}/bin/gli"); end
 
     fixture = :all
     fixture = :each if ENV['DEBUG'] # So that Aruba announces all the before/after commands as well

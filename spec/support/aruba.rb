@@ -11,7 +11,7 @@ module CleanEnv
   OUR_BREW_GEM_BIN  = "#{OUR_BREW_GEM_HOME}/bin"
 
   def run(*args)
-    clean_env = Bundler.clean_env
+    clean_env = Bundler.unbundled_env
     (ENV.keys - clean_env.keys).each {|k| delete_environment_variable k }
     # Also delete any RVM crud
     delete_environment_variable "RUBYOPT"
@@ -24,7 +24,7 @@ module CleanEnv
     # Ensure that `brew` finds our local `brew-gem` command by putting it first in the path
     path.unshift OUR_BREW_GEM_BIN unless path.first == OUR_BREW_GEM_BIN
     set_environment_variable "PATH", path.join(":")
-    super
+    run_command(*args)
   end
 end
 
