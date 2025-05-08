@@ -78,8 +78,8 @@ class <%= klass %> < Formula
 
     raise "gem install '<%= name %>' failed with status #{$?.exitstatus}" unless $?.success?
 
-    bin.rmtree if bin.exist?
-    bin.mkpath
+    FileUtils.rm_rf bin if bin.exist?
+    FileUtils.mkdir_p bin
 
     brew_gem_prefix = prefix+"gems/<%= name %>-#{version}"
 
