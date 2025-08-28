@@ -1,5 +1,6 @@
 require 'erb'
 require 'tempfile'
+require 'fileutils'
 require 'shellwords'
 
 module Brew::Gem::CLI
@@ -92,8 +93,8 @@ module Brew::Gem::CLI
     @homebrew_prefix ||= ENV['HOMEBREW_PREFIX'] || `brew --prefix`.chomp
   end
 
-  def homebrew_cache
-    @homebrew_cache ||=  `brew --cache`.chomp
+  def homebrew_tap
+    @homebrew_tap ||=  File.join(homebrew_prefix, 'Library/Taps/brew-gem/homebrew-gems')
   end
 
   def expand_formula(name, version, use_homebrew_ruby = false, gem_arguments = [])
@@ -104,16 +105,16 @@ module Brew::Gem::CLI
     template.result(binding)
   end
 
-  def with_temp_formula(name, version, use_homebrew_ruby, gem_arguments)
-    filename = File.join homebrew_cache, "gem-#{name}.rb"
+  def write_formula(name, version, use_homebrew_ruby, gem_arguments)
+    gem_name = "gem-#{name}"
+    filename = File.join homebrew_tap, "#{gem_name}.rb"
 
+    FileUtils.mkdir_p homebrew_tap
     open(filename, 'w') do |f|
       f.puts expand_formula(name, version, use_homebrew_ruby, gem_arguments)
     end
 
-    yield filename
-  ensure
-    File.unlink filename
+    "brew-gem/gems/#{gem_name}"
   end
 
   def homebrew_ruby?(ruby_flag)
@@ -125,14 +126,13 @@ module Brew::Gem::CLI
     arguments = process_args(args)
     name      = arguments.gem
     version   = fetch_version(name, arguments.supplied_version)
-    with_temp_formula(name, version, homebrew_ruby?(arguments.ruby_flag), arguments.to_gem_args) do |filename|
-      case arguments.command
-      when "formula"
-        $stdout.puts File.read(filename)
-      else
-        system "brew #{arguments.to_brew_args.shelljoin} --formula #{filename}"
-        exit $?.exitstatus unless $?.success?
-      end
+    formula   = write_formula(name, version, homebrew_ruby?(arguments.ruby_flag), arguments.to_gem_args)
+    case arguments.command
+    when "formula"
+      $stdout.puts File.read(filename)
+    else
+      system "brew #{arguments.to_brew_args.shelljoin} --formula #{formula}"
+      exit $?.exitstatus unless $?.success?
     end
   end
 end
