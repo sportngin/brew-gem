@@ -89,7 +89,11 @@ module Brew::Gem::CLI
   end
 
   def homebrew_prefix
-    ENV['HOMEBREW_PREFIX'] || `brew --prefix`.chomp
+    @homebrew_prefix ||= ENV['HOMEBREW_PREFIX'] || `brew --prefix`.chomp
+  end
+
+  def homebrew_cache
+    @homebrew_cache ||=  `brew --cache`.chomp
   end
 
   def expand_formula(name, version, use_homebrew_ruby = false, gem_arguments = [])
@@ -101,7 +105,7 @@ module Brew::Gem::CLI
   end
 
   def with_temp_formula(name, version, use_homebrew_ruby, gem_arguments)
-    filename = File.join Dir.tmpdir, "gem-#{name}.rb"
+    filename = File.join homebrew_cache, "gem-#{name}.rb"
 
     open(filename, 'w') do |f|
       f.puts expand_formula(name, version, use_homebrew_ruby, gem_arguments)
