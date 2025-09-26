@@ -94,7 +94,7 @@ module Brew::Gem::CLI
   end
 
   def homebrew_tap
-    @homebrew_tap ||=  File.join(homebrew_prefix, 'Library/Taps/brew-gem/homebrew-gems')
+    @homebrew_tap ||=  File.join(`brew --repository`.chomp, 'Library/Taps/brew-gem/homebrew-gems')
   end
 
   def expand_formula(name, version, use_homebrew_ruby = false, gem_arguments = [])
