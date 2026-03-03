@@ -93,13 +93,24 @@ module Brew::Gem::CLI
     @homebrew_prefix ||= ENV['HOMEBREW_PREFIX'] || `brew --prefix`.chomp
   end
 
+  def gemrc_path
+    # Support XDG config directory (Ruby >= 4.0 uses ~/.config/gem/gemrc)
+    xdg_gemrc = File.join(ENV.fetch("XDG_CONFIG_HOME", "#{ENV['HOME']}/.config"), "gem", "gemrc")
+    legacy_gemrc = "#{ENV['HOME']}/.gemrc"
+    if File.exist?(xdg_gemrc)
+      xdg_gemrc
+    else
+      legacy_gemrc
+    end
+  end
+
   def homebrew_tap
     @homebrew_tap ||=  File.join(`brew --repository`.chomp, 'Library/Taps/brew-gem/homebrew-gems')
   end
 
   def expand_formula(name, version, use_homebrew_ruby = false, gem_arguments = [])
     klass           = 'Gem' + name.capitalize.gsub(/[-_.\s]([a-zA-Z0-9])/) { $1.upcase }.gsub('+', 'x')
-    user_gemrc      = "#{ENV['HOME']}/.gemrc"
+    user_gemrc      = gemrc_path
     template_file   = File.expand_path('../formula.rb.erb', __FILE__)
     template        = ERB.new(File.read(template_file))
     template.result(binding)
