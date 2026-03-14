@@ -1,0 +1,53 @@
+name: CI Build
+on:
+  push:
+  pull_request:
+
+concurrency:
+  group: environment-${{ github.ref }}
+
+permissions:
+  contents: read
+
+env:
+  APP_NAME: "brew-gem"
+  BRANCH_NAME: ${{ github.head_ref || github.ref_name }}
+
+jobs:
+  build-test:
+    name: Build and test
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: '1'
+
+    - name: Setup Ruby
+      uses: ruby/setup-ruby@v1
+      with:
+        ruby-version: '3.2'
+        bundler-cache: true
+
+    - name: Run tests
+      run: bundle exec rake
+
+    - name: Slack Notify Via Commissioner
+      if: always()
+      env:
+        GITHUB_TOKEN: ${{ secrets.GORDON_DEPLOY_GITHUB_TOKEN }}
+        STATUS: ${{ job.status }}
+        PR_NUMBER: ${{ github.event.number }}
+      run: |
+        curl --silent --output /dev/stderr -X POST \
+          "https://commissioner.sportngin.com/github_actions/notification" \
+          -H "authorization: Bearer $GITHUB_TOKEN" \
+          -d "payload={ \"repo_slug\": \"$GITHUB_REPOSITORY\",
+                \"commit\": \"$GITHUB_SHA\",
+                \"branch\": \"$BRANCH_NAME\",
+                \"type\": \"$GITHUB_EVENT_NAME\",
+                \"pull_request_number\": \"$PR_NUMBER\",
+                \"build_url\": \"$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID\",
+                \"status_message\": \"${STATUS//success/Passed}\"
+              }"
