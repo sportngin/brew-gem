@@ -19,7 +19,8 @@ class RubyGemsDownloadStrategy < AbstractDownloadStrategy
     ohai "Fetching <%= name %> from gem source"
     cache.cd do
       ENV['GEM_SPEC_CACHE'] = "#{cache}/gem_spec_cache"
-      system "#{ruby_bin}/gem", "fetch", "<%= name %>", "--version", gem_version
+      system "#{ruby_bin}/gem", "fetch", "<%= name %>",
+          "--version", gem_version, *GEM_ARGUMENTS
     end
   end
 
