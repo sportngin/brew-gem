@@ -4,7 +4,8 @@ require 'formula'
 require 'fileutils'
 
 USE_HOMEBREW_RUBY = <%= use_homebrew_ruby ? "true" : "false" %>
-GEM_ARGUMENTS = <%= gem_arguments.inspect %>
+GEM_FLAGS = <%= gem_flags.inspect %>
+INSTALL_FLAGS = <%= install_flags.inspect %>
 
 module RubyBin
   def ruby_bin
@@ -20,7 +21,7 @@ class RubyGemsDownloadStrategy < AbstractDownloadStrategy
     cache.cd do
       ENV['GEM_SPEC_CACHE'] = "#{cache}/gem_spec_cache"
       system "#{ruby_bin}/gem", "fetch", "<%= name %>",
-          "--version", gem_version, *GEM_ARGUMENTS
+          "--version", gem_version, *GEM_FLAGS
     end
   end
 
@@ -75,7 +76,7 @@ class <%= klass %> < Formula
              "--no-wrapper",
              "--no-user-install",
              "--install-dir", prefix,
-             "--bindir", bin, *GEM_ARGUMENTS
+             "--bindir", bin, *(GEM_FLAGS+INSTALL_FLAGS)
 
     raise "gem install '<%= name %>' failed with status #{$?.exitstatus}" unless $?.success?
 
