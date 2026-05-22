@@ -107,7 +107,7 @@ RSpec.describe Brew::Gem::CLI do
     before do
       allow(cli).to receive(:exit)
       allow(cli).to receive(:system) {|x| command << x }
-      allow(cli).to receive(:write_formula).and_return(formula)
+      allow(cli).to receive(:write_formula).and_return([formula, formula])
       allow(cli).to receive(:fetch_version) {|n, arguments| arguments.supplied_version || version }
       allow(cli).to receive(:abort) {|msg| raise msg }
       allow(File).to receive(:exist?).with('/usr/local/opt/ruby').and_return opt_ruby_exists

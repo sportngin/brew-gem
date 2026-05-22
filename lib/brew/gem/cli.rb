@@ -243,7 +243,7 @@ module Brew::Gem::CLI
       f.puts expand_formula(name, version, use_homebrew_ruby, gem_flags, install_flags)
     end
 
-    "brew-gem/gems/#{gem_name}"
+    [filename, "brew-gem/gems/#{gem_name}"]
   end
 
   def homebrew_ruby?(ruby_flag)
@@ -255,7 +255,7 @@ module Brew::Gem::CLI
     arguments = process_args(args)
     name      = arguments.gem
     version   = fetch_version(name, arguments)
-    formula   = write_formula(name, version, homebrew_ruby?(arguments.ruby_flag), arguments.gem_flags, arguments.install_flags)
+    filename, formula = write_formula(name, version, homebrew_ruby?(arguments.ruby_flag), arguments.gem_flags, arguments.install_flags)
     case arguments.command
     when "formula"
       $stdout.puts File.read(filename)
